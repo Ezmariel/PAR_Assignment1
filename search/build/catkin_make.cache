@@ -1,0 +1,2 @@
+
+-DCATKIN_DEVEL_PREFIX=/home/chris/assignment/PAR_Assignment1/search/devel -DCMAKE_INSTALL_PREFIX=/home/chris/assignment/PAR_Assignment1/search/install -G Unix Makefiles
