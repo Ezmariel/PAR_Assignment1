@@ -12,7 +12,7 @@ from std_msgs.msg import Float32MultiArray
 from tf import TransformListener
 
 class Waypoint():
-    objectId = 0
+    objectId = -1
 
     def __init__(self):
         self.client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -23,6 +23,7 @@ class Waypoint():
         if len(data.data) > 0:
             # rounding because id stored as float
             self.objectId = int(data.data[0])
+            rospy.loginfo("id = " + str(self.objectId))
 
     def execute(self):
 	    # Subscribe to the image recognition node
@@ -43,7 +44,8 @@ class Waypoint():
         start = False
         while not start:
 	        # wait for starting marker
-            if self.objectId == 100:
+            if self.objectId == 3:
+                rospy.loginfo("starter found")
                 start = True
 
         goal = MoveBaseGoal()
