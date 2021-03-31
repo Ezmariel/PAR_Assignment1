@@ -1,6 +1,6 @@
 <launch>
 
-    <node name="gotopose" pkg="waypoint" type="waypoint.py" output="screen">
+    <node name="gotopose" pkg="search" type="waypoint.py" output="screen">
     </node>
 
 </launch>
