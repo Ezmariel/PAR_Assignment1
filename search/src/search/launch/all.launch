@@ -1,6 +1,6 @@
 <launch>
     <!-- Launch Movement -->
-    <include file="$(find search)/launch/waypoint.launch" />
+    <include file="$(find search)/launch/hazard_search.launch" />
 
     <!-- Launch Object Recognition -->
     <include file="$(find search)/launch/vision.launch" />

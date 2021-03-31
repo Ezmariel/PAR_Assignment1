@@ -7,8 +7,4 @@
 # new environment variables
 
 # modified environment variables
-export CMAKE_PREFIX_PATH="/home/chris/assignment/PAR_Assignment1/search/devel:$CMAKE_PREFIX_PATH"
-export LD_LIBRARY_PATH="/home/chris/assignment/PAR_Assignment1/search/devel/lib:$LD_LIBRARY_PATH"
-export PWD='/home/chris/assignment/PAR_Assignment1/search/build'
-export ROSLISP_PACKAGE_DIRECTORIES="/home/chris/assignment/PAR_Assignment1/search/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
-export ROS_PACKAGE_PATH="/home/chris/assignment/PAR_Assignment1/search/src:$ROS_PACKAGE_PATH"
+export PWD='/home/daniel/assignment1/PAR_Assignment1/search/build'

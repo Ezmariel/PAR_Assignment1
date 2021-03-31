@@ -1,0 +1,8 @@
+prefix=/home/daniel/assignment1/PAR_Assignment1/search/devel
+
+Name: search
+Description: Description of search
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

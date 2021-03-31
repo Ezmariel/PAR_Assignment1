@@ -1,0 +1,6 @@
+<launch>
+
+    <node name="hazard_search" pkg="search" type="hazard_search.py" output="screen">
+    </node>
+
+</launch>

@@ -1,8 +1,8 @@
-# Install script for directory: /home/chris/assignment/PAR_Assignment1/search/src/search
+# Install script for directory: /home/daniel/assignment1/PAR_Assignment1/search/src/search
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/home/chris/assignment/PAR_Assignment1/search/install")
+  set(CMAKE_INSTALL_PREFIX "/home/daniel/assignment1/PAR_Assignment1/search/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,25 +38,25 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/chris/assignment/PAR_Assignment1/search/build/search/catkin_generated/installspace/waypoint.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/daniel/assignment1/PAR_Assignment1/search/build/search/catkin_generated/installspace/search.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/waypoint/cmake" TYPE FILE FILES
-    "/home/chris/assignment/PAR_Assignment1/search/build/search/catkin_generated/installspace/waypointConfig.cmake"
-    "/home/chris/assignment/PAR_Assignment1/search/build/search/catkin_generated/installspace/waypointConfig-version.cmake"
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/search/cmake" TYPE FILE FILES
+    "/home/daniel/assignment1/PAR_Assignment1/search/build/search/catkin_generated/installspace/searchConfig.cmake"
+    "/home/daniel/assignment1/PAR_Assignment1/search/build/search/catkin_generated/installspace/searchConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/waypoint" TYPE FILE FILES "/home/chris/assignment/PAR_Assignment1/search/src/search/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/search" TYPE FILE FILES "/home/daniel/assignment1/PAR_Assignment1/search/src/search/package.xml")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/waypoint" TYPE PROGRAM FILES "/home/chris/assignment/PAR_Assignment1/search/build/search/catkin_generated/installspace/waypoint.py")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/search" TYPE PROGRAM FILES "/home/daniel/assignment1/PAR_Assignment1/search/build/search/catkin_generated/installspace/hazard_search.py")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/waypoint" TYPE DIRECTORY FILES "/home/chris/assignment/PAR_Assignment1/search/src/search/launch")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/search" TYPE DIRECTORY FILES "/home/daniel/assignment1/PAR_Assignment1/search/src/search/launch")
 endif()
 

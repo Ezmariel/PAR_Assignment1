@@ -1,5 +1,5 @@
 # generated from catkin/cmake/template/order_packages.context.py.in
-source_root_dir = '/home/chris/assignment/PAR_Assignment1/search/src'
+source_root_dir = '/home/daniel/assignment1/PAR_Assignment1/search/src'
 whitelisted_packages = ''.split(';') if '' != '' else []
 blacklisted_packages = ''.split(';') if '' != '' else []
-underlay_workspaces = '/home/chris/rosbot_workspace/melodic_workspace/devel;/home/chris/husarion_ws/devel;/opt/ros/melodic'.split(';') if '/home/chris/rosbot_workspace/melodic_workspace/devel;/home/chris/husarion_ws/devel;/opt/ros/melodic' != '' else []
+underlay_workspaces = '/home/daniel/assignment1/PAR_Assignment1/search/devel;/opt/ros/melodic'.split(';') if '/home/daniel/assignment1/PAR_Assignment1/search/devel;/opt/ros/melodic' != '' else []

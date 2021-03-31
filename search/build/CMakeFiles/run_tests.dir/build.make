@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/chris/assignment/PAR_Assignment1/search/src
+CMAKE_SOURCE_DIR = /home/daniel/assignment1/PAR_Assignment1/search/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/chris/assignment/PAR_Assignment1/search/build
+CMAKE_BINARY_DIR = /home/daniel/assignment1/PAR_Assignment1/search/build
 
 # Utility rule file for run_tests.
 
@@ -67,6 +67,6 @@ CMakeFiles/run_tests.dir/clean:
 .PHONY : CMakeFiles/run_tests.dir/clean
 
 CMakeFiles/run_tests.dir/depend:
-	cd /home/chris/assignment/PAR_Assignment1/search/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/chris/assignment/PAR_Assignment1/search/src /home/chris/assignment/PAR_Assignment1/search/src /home/chris/assignment/PAR_Assignment1/search/build /home/chris/assignment/PAR_Assignment1/search/build /home/chris/assignment/PAR_Assignment1/search/build/CMakeFiles/run_tests.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/daniel/assignment1/PAR_Assignment1/search/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/daniel/assignment1/PAR_Assignment1/search/src /home/daniel/assignment1/PAR_Assignment1/search/src /home/daniel/assignment1/PAR_Assignment1/search/build /home/daniel/assignment1/PAR_Assignment1/search/build /home/daniel/assignment1/PAR_Assignment1/search/build/CMakeFiles/run_tests.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/run_tests.dir/depend
 
