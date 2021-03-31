@@ -14,7 +14,11 @@ class Hazard_search():
         if len(data.data) > 0:
             # rounding because id stored as float
             self.objectId = int(data.data[0])
-            rospy.loginfo("id = " + str(self.objectId))
+            if self.objectId < 100:
+                rospy.loginfo("id = " + str(self.objectId))
+                hp.publish(self.objectId)
+            else:
+                rospy.loginfo("id = Start Marker")
 
     def execute(self):
 	    # Subscribe to the image recognition node
@@ -26,7 +30,7 @@ class Hazard_search():
 # Short ROS Node method
 if __name__ == '__main__':
     try:
-        rospy.Publisher('hazards', Marker, queue_size=10)
+        hp = rospy.Publisher('hazards', Marker, queue_size=10)
         rospy.init_node('rosbot_waypoint', anonymous=True)
         
         hs = Hazard_search()
