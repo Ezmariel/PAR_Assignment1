@@ -22,7 +22,7 @@ class Hazard_search():
 
                 self.marker_object.header.frame_id = '/odom'
                 self.marker_object.header.stamp = rospy.get_rostime()
-                self.marker_object.ns = 'some_robot'
+                self.marker_object.ns = 'hazard_marker'
                 self.marker_object.id = self.objectId
                 self.marker_object.type = Marker.SPHERE
                 self.marker_object.action = Marker.ADD
@@ -60,7 +60,7 @@ class Hazard_search():
 if __name__ == '__main__':
     try:
         hp = rospy.Publisher('/hazards', Marker, queue_size=10)
-        rospy.init_node('rosbot_waypoint', anonymous=True)
+        rospy.init_node('hazard_search', anonymous=True)
         
         hs = Hazard_search()
         hs.execute()
