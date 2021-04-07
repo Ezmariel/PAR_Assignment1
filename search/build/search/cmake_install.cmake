@@ -57,6 +57,10 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/search" TYPE PROGRAM FILES "/home/daniel/assignment1/PAR_Assignment1/search/build/search/catkin_generated/installspace/basic_marker.py")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/search" TYPE DIRECTORY FILES "/home/daniel/assignment1/PAR_Assignment1/search/src/search/launch")
 endif()
 
