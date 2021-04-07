@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
+import math
 from visualization_msgs.msg import Marker
 from std_msgs.msg import Float32MultiArray
 from cv_bridge import CvBridge, CvBridgeError
@@ -72,14 +73,16 @@ class Hazard_search():
             self.sign_depth = cvImage[self.signMiddle[0], self.signMiddle[1]]
             rospy.loginfo(self.sign_depth)
             self.checkDepth = False
-            self.placeMarker(x_val = self.sign_depth, signNum = self.signID)
+            if math.isnan(self.sign_depth):
+                self.sign_depth = .25
+            self.placeMarker(x_val = self.sign_depth)
 
-    def placeMarker(self, x_val = 0, y_val = 0, signNum = 0):
+    def placeMarker(self, x_val = 0, y_val = 0):
         rospy.loginfo('placing marker')
         self.marker_object.header.frame_id = '/map'
         self.marker_object.header.stamp = rospy.get_rostime()
         self.marker_object.ns = 'hazard_marker'
-        self.marker_object.id = signNum
+        self.marker_object.id = self.signID
         self.marker_object.type = Marker.SPHERE
         self.marker_object.action = Marker.ADD
 
@@ -95,9 +98,9 @@ class Hazard_search():
         self.marker_object.scale.y = 1.0
         self.marker_object.scale.z = 1.0
 
-        self.marker_object.color.r = 0
-        self.marker_object.color.g = 1
-        self.marker_object.color.b = 0
+        self.marker_object.color.r = (self.signID*11)%3
+        self.marker_object.color.g = (self.signID*11)%5
+        self.marker_object.color.b = (self.signID*11)%7
         self.marker_object.color.a = 1.0
 
         hp.publish(self.marker_object)
@@ -113,7 +116,7 @@ class Hazard_search():
 # Short ROS Node method
 if __name__ == '__main__':
     try:
-        hp = rospy.Publisher('/hazards', Marker, queue_size=10)
+        hp = rospy.Publisher('/hazards', Marker, queue_size=1)
         rospy.init_node('hazard_search', anonymous=True)
         
         hs = Hazard_search()
