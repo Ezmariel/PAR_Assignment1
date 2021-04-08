@@ -122,28 +122,6 @@ class Hazard_search():
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 pass
 
-        rospy.loginfo('robot relative marker')
-        # place marker in robot relative
-        self.marker_object_rr.header.frame_id = '/base_link'
-        self.marker_object_rr.header.stamp = rospy.Time.now()
-        self.marker_object_rr.ns = 'hazard_marker'
-        self.marker_object_rr.id = self.signID + 20
-        self.marker_object_rr.type = Marker.CUBE
-        self.marker_object_rr.action = Marker.ADD
-
-        self.marker_object_rr.pose = self.marker_pose_rr.pose
-
-        self.marker_object_rr.scale.x = 0.2
-        self.marker_object_rr.scale.y = 0.2
-        self.marker_object_rr.scale.z = 0.2
-
-        self.marker_object_rr.color.r = (self.signID*13)%3
-        self.marker_object_rr.color.g = (self.signID*13)%5
-        self.marker_object_rr.color.b = (self.signID*13)%7
-        self.marker_object_rr.color.a = 1.0
-
-        hp.publish(self.marker_object_rr)
-
         rospy.loginfo('map relative marker')
         # place marker in map relative
         self.marker_object.header.frame_id = '/map'
@@ -159,9 +137,9 @@ class Hazard_search():
         self.marker_object.scale.y = 0.2
         self.marker_object.scale.z = 0.2
 
-        self.marker_object.color.r = (self.signID*11)%3
-        self.marker_object.color.g = (self.signID*11)%5
-        self.marker_object.color.b = (self.signID*11)%7
+        self.marker_object.color.r = 0
+        self.marker_object.color.g = 0
+        self.marker_object.color.b = self.signID
         self.marker_object.color.a = 1.0
 
         hp.publish(self.marker_object)
