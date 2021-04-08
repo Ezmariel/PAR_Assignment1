@@ -27,6 +27,7 @@ class Hazard_search():
 
         # creating a new marker object to be published
         self.marker_object = Marker()
+        self.marker_object_rr = Marker()
 
         # creating a listener for the transformations
         self.listener = tf.TransformListener()
@@ -52,6 +53,7 @@ class Hazard_search():
             # rounding because id stored as float
             self.signID = int(data.data[0])
             if self.signID < 100 and self.checkDepth == 0:
+                rospy.loginfo('marker seen')
                 rospy.loginfo("id = " + str(self.signID))
 
                 width = data.data[1]
@@ -82,101 +84,88 @@ class Hazard_search():
         
         if self.checkDepth == 1:
             self.sign_depth = cvImage[self.signMiddle[0], self.signMiddle[1]]
+            
             rospy.loginfo(self.sign_depth)
+            
             #self.checkDepth = False
             if math.isnan(self.sign_depth):
                 self.sign_depth = 1
             self.placeMarker(x_val = self.sign_depth)
 
-    def placeMarker(self, x_val = 0, y_val = 0):
-        rospy.loginfo('placing marker')
-        rospy.loginfo('POINT 1**************************************')
-
+    def placeMarker(self, x_val = 0):
+        rospy.loginfo('transforming marker')
+    
         marker_transformed = False
 
         while not marker_transformed:
             try:
                 dest = '/map'
                 src = '/camera_rgb_optical_frame'
-                (trans, rot) = self.listener.lookupTransform(dest, src, rospy.Time.now() - rospy.Duration(0.1))
-                print("Transform: " + src + " -> " + dest + ": Translation: (" + str(trans) + "), Rotation: (" + str(rot) + ")" )
-
+                
                 # creating a stamped pose of the marker in robot relative space
                 self.marker_pose_rr.header.stamp = rospy.Time.now()
                 self.marker_pose_rr.header.frame_id = src
                 self.marker_pose_rr.pose.position.x = x_val
-                self.marker_pose_rr.pose.position.y = y_val
+                self.marker_pose_rr.pose.position.y = 0.0
                 self.marker_pose_rr.pose.position.z = 0.0
                 self.marker_pose_rr.pose.orientation.x = 0.0
                 self.marker_pose_rr.pose.orientation.y = 0.0
                 self.marker_pose_rr.pose.orientation.z = 0.0
                 self.marker_pose_rr.pose.orientation.w = 1.0
 
-                #pstamped = geometry_msgs.msg.PoseStamped()
-                #pstamped.header.stamp = rospy.Time.now() - rospy.Duration(0.1)
-                #pstamped.header.frame_id = src
-                #pstamped.pose.position.x = 1.0
-                #pstamped.pose.position.y = 0.0
-                #pstamped.pose.position.z = 0.0
-                #pstamped.pose.orientation.x = 0.0
-                #pstamped.pose.orientation.y = 0.0
-                #pstamped.pose.orientation.z = 0.0
-                #pstamped.pose.orientation.w = 1.0
-
-                rospy.loginfo('POINT 2**************************************')
-
                 # transform the pose to map relative
                 self.transpose_mr = self.listener.transformPose(dest, self.marker_pose_rr)
-                print("\ttransformed: \n" + str(self.transpose_mr.pose))
-
+                
                 marker_transformed = True
             
-                rospy.loginfo('POINT 3**************************************')
-
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                #print("could not load transform: " + src + " -> " + dest)
                 pass
 
+        rospy.loginfo('robot relative marker')
+        # place marker in robot relative
+        self.marker_object_rr.header.frame_id = '/map'
+        self.marker_object_rr.header.stamp = rospy.Time.now()
+        self.marker_object_rr.ns = 'hazard_marker'
+        self.marker_object_rr.id = self.signID
+        self.marker_object_rr.type = Marker.SPHERE
+        self.marker_object_rr.action = Marker.ADD
 
+        self.marker_object_rr.pose = self.marker_pose_rr.pose
+
+        self.marker_object_rr.scale.x = 0.2
+        self.marker_object_rr.scale.y = 0.2
+        self.marker_object_rr.scale.z = 0.2
+
+        self.marker_object_rr.color.r = (self.signID*11)%3
+        self.marker_object_rr.color.g = (self.signID*11)%5
+        self.marker_object_rr.color.b = (self.signID*11)%7
+        self.marker_object_rr.color.a = 1.0
+
+        hp.publish(self.marker_object_rr)
+
+        rospy.loginfo('robot relative marker')
+        # place marker in map relative
         self.marker_object.header.frame_id = '/map'
         self.marker_object.header.stamp = rospy.Time.now()
         self.marker_object.ns = 'hazard_marker'
-        self.marker_object.id = self.signID
+        self.marker_object.id = self.signID + 20
         self.marker_object.type = Marker.SPHERE
         self.marker_object.action = Marker.ADD
 
-        rospy.loginfo('POINT 4**************************************')
-
         self.marker_object.pose = self.transpose_mr.pose
-
-        rospy.loginfo('POINT 5**************************************')
-
-        #self.marker_object.pose.position.x = x_val
-        #self.marker_object.pose.position.y = y_val
-        #self.marker_object.pose.position.z = 0.25
-        #self.marker_object.pose.orientation.x = 0.0
-        #self.marker_object.pose.orientation.y = 0.0
-        #self.marker_object.pose.orientation.z = 0.0
-        #self.marker_object.pose.orientation.w = 1.0
 
         self.marker_object.scale.x = 0.2
         self.marker_object.scale.y = 0.2
         self.marker_object.scale.z = 0.2
 
-        self.marker_object.color.r = (self.signID*11)%3
-        self.marker_object.color.g = (self.signID*11)%5
-        self.marker_object.color.b = (self.signID*11)%7
+        self.marker_object.color.r = (self.signID*13)%3
+        self.marker_object.color.g = (self.signID*13)%5
+        self.marker_object.color.b = (self.signID*13)%7
         self.marker_object.color.a = 1.0
-
-        rospy.loginfo('POINT 6**************************************')
 
         hp.publish(self.marker_object)
 
-        rospy.loginfo('POINT 7**************************************')
-
         rospy.loginfo('marker placed')
-
-        rospy.loginfo('POINT 8**************************************')
 
     def execute(self):
         rospy.loginfo("running")
