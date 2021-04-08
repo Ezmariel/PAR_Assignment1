@@ -83,16 +83,38 @@ class Hazard_search():
             rospy.loginfo(e)
         
         if self.checkDepth == 1:
-            self.sign_depth = cvImage[self.signMiddle[0], self.signMiddle[1]]
-            
+            self.checkDepth = 2
+
+            self.sign_depth = cvImage[self.signMiddle[1], self.signMiddle[0]]
             rospy.loginfo(self.sign_depth)
             
-            #self.checkDepth = False
             if math.isnan(self.sign_depth):
                 self.sign_depth = 1
-            self.placeMarker(x_val = self.sign_depth)
+                yOffset = 0
+                zOffset = 0
+            else:
+                # Calculate y-offset
+                radiansPerPixelWidth = 0.186   # 640 / 60deg = 10.6deg = 0.186rad
+                if self.signMiddle[0] < 320:
+                    theta = (320 - self.signMiddle[0]) * radiansPerPixelWidth
+                    yOffset = self.sign_depth * math.sin(theta)
+                else:
+                    theta = (self.signMiddle[0] - 320) * radiansPerPixelWidth
+                    yOffset = -(self.sign_depth * math.sin(theta))
 
-    def placeMarker(self, x_val = 0):
+                # Calculate z-offset
+                # radiansPerPixelHeight = 0.169    # 480 / 49.5deg = 9.697deg = 0.169
+                # if self.signMiddle[1] < 240:
+                #     theta = (240 - self.signMiddle[1]) * radiansPerPixelHeight
+                #     zOffset = self.sign_depth * math.sin(theta)
+                # else:
+                #     theta = (self.signMiddle[1] - 240) * radiansPerPixelHeight
+                #     zOffset = -(self.sign_depth * math.sin(theta))
+
+            self.placeMarker(x_val = self.sign_depth, y_val = yOffset, z_val=0)
+
+
+    def placeMarker(self, x_val = 0, y_val = 0, z_val = 0):
         rospy.loginfo('transforming marker')
     
         marker_transformed = False
@@ -106,8 +128,8 @@ class Hazard_search():
                 self.marker_pose_rr.header.stamp = rospy.Time.now()
                 self.marker_pose_rr.header.frame_id = src
                 self.marker_pose_rr.pose.position.x = x_val
-                self.marker_pose_rr.pose.position.y = 0.0
-                self.marker_pose_rr.pose.position.z = 0.0
+                self.marker_pose_rr.pose.position.y = y_val
+                self.marker_pose_rr.pose.position.z = z_val
                 self.marker_pose_rr.pose.orientation.x = 0.0
                 self.marker_pose_rr.pose.orientation.y = 0.0
                 self.marker_pose_rr.pose.orientation.z = 0.0
