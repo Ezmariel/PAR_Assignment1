@@ -52,9 +52,10 @@ class Hazard_search():
         if len(data.data) > 0:
             # rounding because id stored as float
             self.signID = int(data.data[0])
-            if self.signID < 100 and self.checkDepth == 0:
+            if self.signID < 100 and self.signID != 0 and self.checkDepth == 0:
                 rospy.loginfo('marker seen')
                 rospy.loginfo("id = " + str(self.signID))
+                self.marker_seen = rospy.Time.now()
 
                 width = data.data[1]
                 height = data.data[2]
@@ -84,6 +85,7 @@ class Hazard_search():
         
         if self.checkDepth == 1:
             self.checkDepth = 2
+            
 
             self.sign_depth = cvImage[self.signMiddle[1], self.signMiddle[0]]
             rospy.loginfo(self.sign_depth)
@@ -111,10 +113,10 @@ class Hazard_search():
                 #     theta = (self.signMiddle[1] - 240) * radiansPerPixelHeight
                 #     zOffset = -(self.sign_depth * math.sin(theta))
 
-            self.placeMarker(x_val = self.sign_depth, y_val = yOffset, z_val=0)
+            self.placeMarker(x_val = self.sign_depth, y_val = yOffset, z_val=0, marker_time = self.marker_seen)
 
 
-    def placeMarker(self, x_val = 0, y_val = 0, z_val = 0):
+    def placeMarker(self, x_val = 0, y_val = 0, z_val = 0, marker_time = rospy.Time()):
         rospy.loginfo('transforming marker')
     
         marker_transformed = False
@@ -125,7 +127,7 @@ class Hazard_search():
                 src = '/base_link'
                 
                 # creating a stamped pose of the marker in robot relative space
-                self.marker_pose_rr.header.stamp = rospy.Time.now()
+                self.marker_pose_rr.header.stamp = marker_time
                 self.marker_pose_rr.header.frame_id = src
                 self.marker_pose_rr.pose.position.x = x_val
                 self.marker_pose_rr.pose.position.y = y_val
@@ -147,7 +149,7 @@ class Hazard_search():
         rospy.loginfo('map relative marker')
         # place marker in map relative
         self.marker_object.header.frame_id = '/map'
-        self.marker_object.header.stamp = rospy.Time.now()
+        self.marker_object.header.stamp = marker_time
         self.marker_object.ns = 'hazard_marker'
         self.marker_object.id = self.signID
         self.marker_object.type = Marker.SPHERE
@@ -165,6 +167,9 @@ class Hazard_search():
         self.marker_object.color.a = 1.0
 
         hp.publish(self.marker_object)
+
+        self.checkDepth = 0
+        self.signID = 0
 
         rospy.loginfo('marker placed')
 
