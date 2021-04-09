@@ -20,6 +20,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/home/daniel/assignment1/PAR_Assignment1/search/src/search/package.xml"
   "/home/daniel/assignment1/PAR_Assignment1/search/src/search/scripts/basic_marker.py"
   "/home/daniel/assignment1/PAR_Assignment1/search/src/search/scripts/hazard_search.py"
+  "/home/daniel/assignment1/PAR_Assignment1/search/src/search/scripts/path_pub.py"
   "/opt/ros/melodic/share/actionlib/cmake/actionlib-msg-extras.cmake"
   "/opt/ros/melodic/share/actionlib/cmake/actionlibConfig-version.cmake"
   "/opt/ros/melodic/share/actionlib/cmake/actionlibConfig.cmake"

@@ -9,6 +9,9 @@ class Path_pub():
     def __init__(self):
         pass
 
+    # subscribe to waypoint creating topic
+    # publish waypoints to /path
+
     def execute(self):
         rospy.loginfo("plotting path")
 

@@ -1,0 +1,5 @@
+<launch>
+    <node name="path_pub" pkg="search" type="path_pub.py" output="screen">
+    </node>
+
+</launch>

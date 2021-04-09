@@ -1,8 +1,15 @@
 <launch>
-    <!-- Launch Movement -->
-    <include file="$(find search)/launch/hazard_search.launch" />
 
     <!-- Launch Object Recognition -->
     <include file="$(find search)/launch/vision.launch" />
+
+    <!-- Launch Movement -->
+    <include file="$(find search)/launch/hazard_search.launch" />
+
+	<!-- Launch Exploration -->
+    <include file="$(find search)/launch/explore.launch" />
+
+	<!-- Launch Path Mapping -->
+    <include file="$(find search)/launch/path_pub.launch" />
 
 </launch>

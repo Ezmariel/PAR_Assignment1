@@ -7,4 +7,9 @@
 # new environment variables
 
 # modified environment variables
+export CMAKE_PREFIX_PATH="/home/daniel/assignment1/PAR_Assignment1/search/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/daniel/assignment1/PAR_Assignment1/search/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/daniel/assignment1/PAR_Assignment1/search/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/daniel/assignment1/PAR_Assignment1/search/build'
+export ROSLISP_PACKAGE_DIRECTORIES='/home/daniel/assignment1/PAR_Assignment1/search/devel/share/common-lisp'
+export ROS_PACKAGE_PATH="/home/chris/assignment/PAR_Assignment1/search/src:/home/daniel/assignment1/PAR_Assignment1/search/src:$ROS_PACKAGE_PATH"
