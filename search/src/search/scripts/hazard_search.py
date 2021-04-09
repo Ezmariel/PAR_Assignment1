@@ -35,6 +35,9 @@ class Hazard_search():
         # creating a stamped pose of the marker in robot relative space
         self.marker_pose_rr = geometry_msgs.msg.PoseStamped()
 
+        # creating a list for markers found
+        self.marker_list = []
+
         # Coords of the middle of a detected sign [x, y]
         self.signMiddle = [-1, -1]
 
@@ -52,9 +55,10 @@ class Hazard_search():
         if len(data.data) > 0:
             # rounding because id stored as float
             self.signID = int(data.data[0])
-            if self.signID < 100 and self.signID != 0 and self.checkDepth == 0:
+            if self.signID < 100 and self.signID not in self.marker_list and self.checkDepth == 0:
                 rospy.loginfo('marker seen')
                 rospy.loginfo("id = " + str(self.signID))
+                self.marker_list.append(self.signID)
                 self.marker_seen = rospy.Time.now()
 
                 width = data.data[1]
@@ -68,7 +72,7 @@ class Hazard_search():
                 self.signMiddle[0] = int(round(middle[0]))
                 self.signMiddle[1] = int(round(middle[1]))
 
-                self.checkDepth = self.checkDepth + 1
+                self.checkDepth = 1
 
                 rospy.loginfo(middle)
                 rospy.loginfo(self.signMiddle)
