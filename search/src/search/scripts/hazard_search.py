@@ -100,7 +100,7 @@ class Hazard_search():
                 zOffset = 0
             else:
                 # Calculate y-offset
-                radiansPerPixelWidth = 0.186   # 640 / 60deg = 10.6deg = 0.186rad
+                radiansPerPixelWidth = 0.00164   # 60deg / 640px = 0.09375deg = 0.00164rad
                 if self.signMiddle[0] < 320:
                     theta = (320 - self.signMiddle[0]) * radiansPerPixelWidth
                     yOffset = self.sign_depth * math.sin(theta)
@@ -108,19 +108,21 @@ class Hazard_search():
                     theta = (self.signMiddle[0] - 320) * radiansPerPixelWidth
                     yOffset = -(self.sign_depth * math.sin(theta))
 
+                # rospy.loginfo("theta: " + str(theta) + ", yOffset: " + str(yOffset))
+
                 # Calculate z-offset
-                # radiansPerPixelHeight = 0.169    # 480 / 49.5deg = 9.697deg = 0.169
-                # if self.signMiddle[1] < 240:
-                #     theta = (240 - self.signMiddle[1]) * radiansPerPixelHeight
-                #     zOffset = self.sign_depth * math.sin(theta)
-                # else:
-                #     theta = (self.signMiddle[1] - 240) * radiansPerPixelHeight
-                #     zOffset = -(self.sign_depth * math.sin(theta))
+                radiansPerPixelHeight = 0.0018   # 49.5deg / 480px = 0.103125deg = 0.0018
+                if self.signMiddle[1] < 240:
+                    theta = (240 - self.signMiddle[1]) * radiansPerPixelHeight
+                    zOffset = self.sign_depth * math.sin(theta)
+                else:
+                    theta = (self.signMiddle[1] - 240) * radiansPerPixelHeight
+                    zOffset = -(self.sign_depth * math.sin(theta))
 
-            self.placeMarker(x_val = self.sign_depth, y_val = yOffset, z_val=0, marker_time = self.marker_seen)
+            self.placeMarker(x_val = self.sign_depth, y_val = yOffset, z_val=zOffset)
 
 
-    def placeMarker(self, x_val = 0, y_val = 0, z_val = 0, marker_time = rospy.Time()):
+    def placeMarker(self, x_val = 0, y_val = 0, z_val = 0):
         rospy.loginfo('transforming marker')
     
         marker_transformed = False
@@ -131,7 +133,7 @@ class Hazard_search():
                 src = '/base_link'
                 
                 # creating a stamped pose of the marker in robot relative space
-                self.marker_pose_rr.header.stamp = marker_time
+                self.marker_pose_rr.header.stamp = rospy.Time.now()
                 self.marker_pose_rr.header.frame_id = src
                 self.marker_pose_rr.pose.position.x = x_val
                 self.marker_pose_rr.pose.position.y = y_val
@@ -153,7 +155,7 @@ class Hazard_search():
         rospy.loginfo('map relative marker')
         # place marker in map relative
         self.marker_object.header.frame_id = '/map'
-        self.marker_object.header.stamp = marker_time
+        self.marker_object.header.stamp = rospy.Time.now()
         self.marker_object.ns = 'hazard_marker'
         self.marker_object.id = self.signID
         self.marker_object.type = Marker.SPHERE
