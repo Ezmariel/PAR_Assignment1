@@ -1,0 +1,7 @@
+<launch>
+
+  <node pkg="explore_lite" type="explore" respawn="true" name="explore" output="screen">
+    <rosparam file="$(find search)/config/exploration.yaml" command="load" />
+  </node>
+
+</launch>
