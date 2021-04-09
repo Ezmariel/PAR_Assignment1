@@ -11,6 +11,7 @@ from std_msgs.msg import Float32MultiArray
 from cv_bridge import CvBridge, CvBridgeError
 from PySide2.QtGui import QTransform
 from sensor_msgs.msg import Image
+from random import random
 
 
 class Hazard_search():
@@ -95,9 +96,9 @@ class Hazard_search():
             rospy.loginfo(self.sign_depth)
             
             if math.isnan(self.sign_depth):
-                self.sign_depth = 1
+                self.sign_depth = 0.4
                 yOffset = 0
-                zOffset = 0
+                zOffset = 0.2
             else:
                 # Calculate y-offset
                 radiansPerPixelWidth = 0.00164   # 60deg / 640px = 0.09375deg = 0.00164rad
@@ -131,7 +132,7 @@ class Hazard_search():
             try:
                 dest = '/map'
                 src = '/base_link'
-                
+
                 # creating a stamped pose of the marker in robot relative space
                 self.marker_pose_rr.header.stamp = rospy.Time.now()
                 self.marker_pose_rr.header.frame_id = src
@@ -160,6 +161,7 @@ class Hazard_search():
         self.marker_object.id = self.signID
         self.marker_object.type = Marker.SPHERE
         self.marker_object.action = Marker.ADD
+        self.marker_object.frame_locked = True
 
         self.marker_object.pose = self.transpose_mr.pose
 
@@ -167,9 +169,9 @@ class Hazard_search():
         self.marker_object.scale.y = 0.2
         self.marker_object.scale.z = 0.2
 
-        self.marker_object.color.r = 0
-        self.marker_object.color.g = 0
-        self.marker_object.color.b = self.signID
+        self.marker_object.color.r = random()
+        self.marker_object.color.g = random()
+        self.marker_object.color.b = random()
         self.marker_object.color.a = 1.0
 
         hp.publish(self.marker_object)
