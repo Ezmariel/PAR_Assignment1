@@ -1,8 +1,0 @@
-prefix=/home/chris/assignment/PAR_Assignment1/search/devel
-
-Name: waypoint
-Description: Description of waypoint
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
