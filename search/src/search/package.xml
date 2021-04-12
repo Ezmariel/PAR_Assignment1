@@ -2,7 +2,7 @@
 <package format="2">
   <name>search</name>
   <version>0.0.0</version>
-  <description>The waypoint package</description>
+  <description>The search package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

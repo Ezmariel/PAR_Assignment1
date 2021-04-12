@@ -164,7 +164,7 @@ include_directories(
 catkin_install_python(PROGRAMS
   #scripts/waypoint.py
   scripts/hazard_search.py
-  scripts/basic_marker.py
+  scripts/path_pub.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

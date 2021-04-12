@@ -5,4 +5,10 @@
     <!-- Launch Object Recognition -->
     <include file="$(find search)/launch/vision.launch" />
 
+    <!-- Launch Object Recognition -->
+    <include file="$(find search)/launch/explore.launch" />
+
+    <!-- Launch Path Tracker -->
+    <include file="$(find search)/launch/path.launch" />
+
 </launch>
