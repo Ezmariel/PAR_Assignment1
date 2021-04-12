@@ -1,0 +1,9 @@
+<launch>
+    
+    <!-- Launch Object Recognition -->
+    <include file="$(find search)/launch/vision.launch" />
+
+    <node name="standby" pkg="search" type="standby.py" output="screen">
+    </node>
+
+</launch>

@@ -3,9 +3,9 @@
     <include file="$(find search)/launch/hazard_search.launch" />
 
     <!-- Launch Object Recognition -->
-    <include file="$(find search)/launch/vision.launch" />
+    <!-- <include file="$(find search)/launch/vision.launch" /> -->
 
-    <!-- Launch Object Recognition -->
+    <!-- Launch Explore Lite -->
     <include file="$(find search)/launch/explore.launch" />
 
     <!-- Launch Path Tracker -->
