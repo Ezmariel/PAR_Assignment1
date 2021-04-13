@@ -86,12 +86,15 @@ private:
 
   bool goalOnBlacklist(const geometry_msgs::Point& goal);
 
-  void publishMessage(const std::string msg);
+  void publishMessage(const std::string& msg);
+
+  void commandListener(const std_msgs::String::ConstPtr& msg);
 
   ros::NodeHandle private_nh_;
   ros::NodeHandle relative_nh_;
   ros::Publisher exploreMessages;
   ros::Publisher marker_array_publisher_;
+  ros::Subscriber exploreCommands;
   tf::TransformListener tf_listener_;
 
   Costmap2DClient costmap_client_;
@@ -106,6 +109,9 @@ private:
   double prev_distance_;
   ros::Time last_progress_;
   size_t last_markers_count_;
+
+  // set when we want manual driving, reset when exploring
+  bool paused;
 
   // parameters
   double planner_frequency_;

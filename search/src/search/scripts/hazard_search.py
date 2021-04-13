@@ -39,8 +39,11 @@ class Hazard_search():
         # creating a list for markers found
         self.marker_list = []
 
-        # Discionary of markers with a list of poses where they were seen
+        # Dictionary of markers with a list of poses where they were seen
         self.markerPoses = {}
+
+        # Dictionary of the published poses for markers
+        self.publishedMarkers = {}
 
         # Coords of the middle of a detected sign [x, y]
         self.signMiddle = [-1, -1]
@@ -50,6 +53,9 @@ class Hazard_search():
 
         # When exploration finishes, do some manual moving
         self.posePublisher = rospy.Publisher('/move_base_simple/goal', geometry_msgs.msg.PoseStamped, queue_size=1)
+
+        # Send messages to explore to control, send PAUSE or GO
+        self.exploreCommandPublisher = rospy.Publisher('/explore_cmd', String, queue_size=10)
 
         # Subscribe to depth camera
         rospy.Subscriber("/camera/depth_registered/image_raw", Image, self.processImage)
@@ -99,6 +105,7 @@ class Hazard_search():
                 self.marker_list.append(self.signID)
                 self.marker_seen = rospy.Time.now()
                 self.savePose(self.signID)
+                self.exploreCommandPublisher.publish("PAUSE")
 
                 width = data.data[1]
                 height = data.data[2]
@@ -213,9 +220,13 @@ class Hazard_search():
         self.marker_object.color.a = 1.0
 
         hp.publish(self.marker_object)
+        if (self.marker_object.id not in self.publishedMarkers):
+            self.publishedMarkers[self.marker_object.id] = self.marker_object
 
         self.checkDepth = 0
         self.signID = 0
+
+        self.exploreCommandPublisher.publish("GO")
 
         rospy.loginfo('marker placed')
 

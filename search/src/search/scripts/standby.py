@@ -10,6 +10,9 @@ class Standby():
         # flag indicating whether or not the start marker was seen
         self.seen = False
 
+        # Subscribe to object recognition
+        self.listener = rospy.Subscriber("/objects", Float32MultiArray, self.objectSeen)
+
     def objectSeen(self, data):
         if len(data.data) > 0:
             # rounding because id stored as float
@@ -17,16 +20,15 @@ class Standby():
             if signID == 100:
                 rospy.loginfo('start marker seen')
                 os.system("roslaunch search all.launch")
-                self.seen = True
-
+                self.listener.unregister()
+                # self.seen = True
 
     def execute(self):
-        # Subscribe to object recognition
-        rospy.Subscriber("/objects", Float32MultiArray, self.objectSeen)
+        rospy.spin()
 
-        rate = rospy.Rate(10)
-        while not self.seen:
-            rate.sleep()
+        # rate = rospy.Rate(10)
+        # while not self.seen:
+        #     rate.sleep()
 
 
 # Short ROS Node method
