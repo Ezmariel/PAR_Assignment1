@@ -6,7 +6,7 @@
     <!-- <include file="$(find search)/launch/vision.launch" /> -->
 
     <!-- Launch Explore Lite -->
-    <include file="$(find search)/launch/explore.launch" />
+    <include file="$(find explore_lite)/launch/explore.launch" />
 
     <!-- Launch Path Tracker -->
     <include file="$(find search)/launch/path.launch" />
