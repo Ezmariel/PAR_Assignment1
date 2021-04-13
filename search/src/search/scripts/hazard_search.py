@@ -7,7 +7,7 @@ import tf2_ros
 import tf_conversions
 import geometry_msgs
 from visualization_msgs.msg import Marker
-from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Float32MultiArray, String
 from cv_bridge import CvBridge, CvBridgeError
 from PySide2.QtGui import QTransform
 from sensor_msgs.msg import Image
@@ -48,11 +48,17 @@ class Hazard_search():
         # distance to a marker
         self.sign_depth = 0
 
+        # When exploration finishes, do some manual moving
+        self.posePublisher = rospy.Publisher('/move_base_simple/goal', geometry_msgs.msg.PoseStamped, queue_size=1)
+
         # Subscribe to depth camera
         rospy.Subscriber("/camera/depth_registered/image_raw", Image, self.processImage)
 
         # Subscribe to object recognition
         rospy.Subscriber("/objects", Float32MultiArray, self.objectSeen)
+
+        # Subscribe to explore messages
+        rospy.Subscriber("/explore_msg", String, self.processExploreMessage)
 
     # Save poses, so we can return for more accurate marker mapping
     def savePose(self, markerId):
@@ -82,8 +88,6 @@ class Hazard_search():
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 pass
-                
-
 
     def objectSeen(self, data):
         if len(data.data) > 0:
@@ -214,6 +218,23 @@ class Hazard_search():
         self.signID = 0
 
         rospy.loginfo('marker placed')
+
+    def processExploreMessage(self, data):
+        rospy.loginfo("Explore message received: " + data.data)
+
+        if data.data == "DONE":
+            rospy.loginfo("Attempting to return to origin")
+            target_pose = geometry_msgs.msg.PoseStamped()
+            target_pose.header.frame_id = 'map'
+            target_pose.header.stamp = rospy.Time.now()
+            target_pose.pose.position.x = 0
+            target_pose.pose.position.y = 0
+            target_pose.pose.position.z = 0
+            target_pose.pose.orientation.x = 0
+            target_pose.pose.orientation.y = 0
+            target_pose.pose.orientation.z = 0
+            target_pose.pose.orientation.w = 1
+            self.posePublisher.publish(target_pose)
 
     def execute(self):
         rospy.loginfo("running")
