@@ -39,6 +39,9 @@ class Hazard_search():
         # creating a list for markers found
         self.marker_list = []
 
+        # Discionary of markers with a list of poses where they were seen
+        self.markerPoses = {}
+
         # Coords of the middle of a detected sign [x, y]
         self.signMiddle = [-1, -1]
 
@@ -51,6 +54,36 @@ class Hazard_search():
         # Subscribe to object recognition
         rospy.Subscriber("/objects", Float32MultiArray, self.objectSeen)
 
+    # Save poses, so we can return for more accurate marker mapping
+    def savePose(self, markerId):
+        dest = '/map'
+        src = '/base_link'
+
+        poseFound = False
+
+        if markerId not in self.markerPoses:
+            self.markerPoses[markerId] = []
+        
+        while not poseFound:
+            try:
+                transformTime = rospy.Time.now()
+                self.listener.lookupTransform(dest, src, transformTime)
+                self.listener.waitForTransform(dest, src, transformTime, rospy.Duration(0.5))
+
+                robotPose = geometry_msgs.msg.PoseStamped()
+                robotPose.header.frame_id = src
+                robotPose.header.stamp = transformTime
+                pose = self.listener.transformPose(dest, robotPose)
+                self.markerPoses[markerId].append(pose)
+
+                rospy.loginfo(self.markerPoses)
+            
+                poseFound = True
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                pass
+                
+
 
     def objectSeen(self, data):
         if len(data.data) > 0:
@@ -61,6 +94,7 @@ class Hazard_search():
                 rospy.loginfo("id = " + str(self.signID))
                 self.marker_list.append(self.signID)
                 self.marker_seen = rospy.Time.now()
+                self.savePose(self.signID)
 
                 width = data.data[1]
                 height = data.data[2]
