@@ -7,7 +7,7 @@ import tf2_ros
 import tf_conversions
 import geometry_msgs
 from visualization_msgs.msg import Marker
-from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Float32MultiArray, String
 from cv_bridge import CvBridge, CvBridgeError
 from PySide2.QtGui import QTransform
 from sensor_msgs.msg import Image
@@ -50,6 +50,9 @@ class Hazard_search():
 
         # Subscribe to object recognition
         rospy.Subscriber("/objects", Float32MultiArray, self.objectSeen)
+
+        # Subscribe to explore messages
+        rospy.Subscriber("/explore_msg", String, self.processExploreMessage)
 
 
     def objectSeen(self, data):
@@ -180,6 +183,9 @@ class Hazard_search():
         self.signID = 0
 
         rospy.loginfo('marker placed')
+
+    def processExploreMessage(self, data):
+        rospy.loginfo("Explore message received: " + data.data)
 
     def execute(self):
         rospy.loginfo("running")
