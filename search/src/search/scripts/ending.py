@@ -74,22 +74,22 @@ class Ending():
         rospy.loginfo("Beginning end segment")
 
         if data.data == "DONE":
-            savePose()
+            self.savePose()
             self.exploreDone = True
 
     def pauseListener(self, data):
         if self.exploreDone == True:
-            if data.data == "PAUSE"
+            if data.data == "PAUSE":
                 self.paused = True
                 rospy.loginfo("Pausing in end segment")
-                if self.spinRot == 0
+                if self.spinRot == 0:
                     self.atGoal = False
                 elif self.spinRot > 0:
                     self.spinRot = self.spinRot - 1
-                    if self.spinRot == 6 and self.spunOnce == True
+                    if self.spinRot == 6 and self.spunOnce == True:
                         self.spunOnce = False
-                        
-            elif data.data == "GO"
+
+            elif data.data == "GO":
                 self.paused = False
                 rospy.loginfo("continuing in end segment")
         else:
@@ -99,8 +99,8 @@ class Ending():
         if self.paused:
             pass
         else:
-            if self.poseSaved == False
-                savePose()
+            if self.poseSaved == False:
+                self.savePose()
 
             rospy.loginfo("Spinning around")
             target_pose = geometry_msgs.msg.PoseStamped()
@@ -110,7 +110,7 @@ class Ending():
             target_pose.pose.orientation.z = (60 * self.spinRot) * 3.14 / 180
             target_pose.pose.orientation.w = 1
             self.spunOnce = self.spinRot + 1
-            if self.spunOnce == False and self.spinRot > 5
+            if self.spunOnce == False and self.spinRot > 5:
                 self.spunOnce = True
             self.posePublisher.publish(target_pose)
 
