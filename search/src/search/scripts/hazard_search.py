@@ -100,12 +100,13 @@ class Hazard_search():
             # rounding because id stored as float
             self.signID = int(data.data[0])
             if self.signID < 100 and self.signID not in self.marker_list and self.checkDepth == 0:
+                self.exploreCommandPublisher.publish("PAUSE")
                 rospy.loginfo('marker seen')
                 rospy.loginfo("id = " + str(self.signID))
                 self.marker_list.append(self.signID)
                 self.marker_seen = rospy.Time.now()
                 self.savePose(self.signID)
-                self.exploreCommandPublisher.publish("PAUSE")
+                
 
                 width = data.data[1]
                 height = data.data[2]

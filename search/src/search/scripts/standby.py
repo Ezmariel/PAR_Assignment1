@@ -24,6 +24,7 @@ class Standby():
                 # self.seen = True
 
     def execute(self):
+        rospy.loginfo("Standing by")
         rospy.spin()
 
         # rate = rospy.Rate(10)
