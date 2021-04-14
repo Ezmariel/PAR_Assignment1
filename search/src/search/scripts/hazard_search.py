@@ -63,9 +63,6 @@ class Hazard_search():
         # Subscribe to object recognition
         rospy.Subscriber("/objects", Float32MultiArray, self.objectSeen)
 
-        # Subscribe to explore messages
-        rospy.Subscriber("/explore_msg", String, self.processExploreMessage)
-
     # Save poses, so we can return for more accurate marker mapping
     def savePose(self, markerId):
         dest = '/map'
