@@ -1,0 +1,6 @@
+<launch>
+
+    <node name="ending" pkg="search" respawn="false" type="ending.py" output="screen">
+    </node>
+
+</launch>
