@@ -123,7 +123,7 @@ void Costmap2DClient::updateFullMap(const nav_msgs::OccupancyGrid::ConstPtr& msg
   double origin_y = msg->info.origin.position.y;
 
   //ROS_DEBUG("received full new map, resizing to: %d, %d", size_in_cells_x,
-            size_in_cells_y);
+  //          size_in_cells_y);
   costmap_.resizeMap(size_in_cells_x, size_in_cells_y, resolution, origin_x,
                      origin_y);
 
