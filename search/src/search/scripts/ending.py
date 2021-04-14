@@ -133,7 +133,7 @@ class Ending():
             self.atGoal = True
 
     def execute(self):
-        rate = rospy.rate(5)
+        rate = rospy.Rate(5.0)
 
         missionComplete = False
 
