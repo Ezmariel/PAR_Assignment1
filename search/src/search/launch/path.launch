@@ -1,6 +1,6 @@
 <launch>
 
-    <node name="publish_path" pkg="search" type="path_pub.py" output="screen">
+    <node name="publish_path" pkg="search" respawn="false" type="path_pub.py" output="screen">
     </node>
 
 </launch>

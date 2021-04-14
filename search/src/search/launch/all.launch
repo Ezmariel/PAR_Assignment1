@@ -8,4 +8,7 @@
     <!-- Launch Path Tracker -->
     <include file="$(find search)/launch/path.launch" />
 
+    <!-- Launch Ending Segment -->
+    <include file="$(find search)/launch/ending.launch" />
+
 </launch>

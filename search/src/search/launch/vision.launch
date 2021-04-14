@@ -2,7 +2,7 @@
     <arg name="teach" default="false"/>
     <arg name="recognize" default="true"/>
 
-    <node pkg="find_object_2d" type="find_object_2d" name="find_object_2d">
+    <node pkg="find_object_2d" type="find_object_2d" respawn="false" name="find_object_2d">
         <remap from="image" to="/camera/rgb/image_raw"/>
         <param name="gui" value="$(arg teach)"/>
         <param if="$(arg recognize)" name="objects_path" value="$(find search)/img/"/>

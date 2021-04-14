@@ -1,6 +1,6 @@
 <launch>
 
-    <node name="standby" pkg="search" type="standby.py" output="screen">
+    <node name="standby" pkg="search" respawn="false" type="standby.py" output="screen">
     </node>
 
 </launch>

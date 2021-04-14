@@ -57,6 +57,7 @@ Explore::Explore()
   , move_base_client_("move_base")
   , prev_distance_(0)
   , last_markers_count_(0)
+  , paused(false)
 {
   double timeout;
   double min_frontier_size;
@@ -78,13 +79,12 @@ Explore::Explore()
         private_nh_.advertise<visualization_msgs::MarkerArray>("frontiers", 10);
   }
 
+  exploreCommands = private_nh_.subscribe("/explore_cmd", 10, &Explore::commandListener, this);
   exploreMessages = private_nh_.advertise<std_msgs::String>("/explore_msg", 10);
 
   ROS_INFO("Waiting to connect to move_base server");
   move_base_client_.waitForServer();
   ROS_INFO("Connected to move_base server");
-
-  publishMessage("START");
 
   exploring_timer_ =
       relative_nh_.createTimer(ros::Duration(1. / planner_frequency_),
@@ -96,12 +96,26 @@ Explore::~Explore()
   stop();
 }
 
-void Explore::publishMessage(const std::string msg) {
+void Explore::publishMessage(const std::string& msg) {
   std_msgs::String signal;
   std::stringstream ss;
   ss << msg;
   signal.data = ss.str();
   exploreMessages.publish(signal);
+}
+
+void Explore::commandListener(const std_msgs::String::ConstPtr& msg) {
+  if (msg->data == "PAUSE") {
+    paused = true;
+    ROS_INFO("Pausing in explore");
+
+    // cancel all goals
+    move_base_client_.cancelAllGoals();
+
+  } else if (msg->data == "GO") {
+    ROS_INFO("Resuming in explore");
+    paused = false;
+  }
 }
 
 void Explore::visualizeFrontiers(
@@ -123,7 +137,7 @@ void Explore::visualizeFrontiers(
   green.b = 0;
   green.a = 1.0;
 
-  ROS_DEBUG("visualising %lu frontiers", frontiers.size());
+  //ROS_DEBUG("visualising %lu frontiers", frontiers.size());
   visualization_msgs::MarkerArray markers_msg;
   std::vector<visualization_msgs::Marker>& markers = markers_msg.markers;
   visualization_msgs::Marker m;
@@ -190,13 +204,17 @@ void Explore::visualizeFrontiers(
 
 void Explore::makePlan()
 {
+  if (paused) {
+    return;
+  }
+
   // find frontiers
   auto pose = costmap_client_.getRobotPose();
   // get frontiers sorted according to cost
   auto frontiers = search_.searchFrom(pose.position);
-  ROS_DEBUG("found %lu frontiers", frontiers.size());
+  //ROS_DEBUG("found %lu frontiers", frontiers.size());
   for (size_t i = 0; i < frontiers.size(); ++i) {
-    ROS_DEBUG("frontier %zd cost: %f", i, frontiers[i].cost);
+    //ROS_DEBUG("frontier %zd cost: %f", i, frontiers[i].cost);
   }
 
   if (frontiers.empty()) {
@@ -232,7 +250,7 @@ void Explore::makePlan()
   // black list if we've made no progress for a long time
   if (ros::Time::now() - last_progress_ > progress_timeout_) {
     frontier_blacklist_.push_back(target_position);
-    ROS_DEBUG("Adding current goal to black list");
+    //ROS_DEBUG("Adding current goal to black list");
     makePlan();
     return;
   }
@@ -277,10 +295,10 @@ void Explore::reachedGoal(const actionlib::SimpleClientGoalState& status,
                           const move_base_msgs::MoveBaseResultConstPtr&,
                           const geometry_msgs::Point& frontier_goal)
 {
-  ROS_DEBUG("Reached goal with status: %s", status.toString().c_str());
+  //ROS_DEBUG("Reached goal with status: %s", status.toString().c_str());
   if (status == actionlib::SimpleClientGoalState::ABORTED) {
     frontier_blacklist_.push_back(frontier_goal);
-    ROS_DEBUG("Adding current goal to black list");
+    //ROS_DEBUG("Adding current goal to black list");
   }
 
   // find new goal immediatelly regardless of planning frequency.
