@@ -7,8 +7,8 @@ from std_msgs.msg import Float32MultiArray
 class Standby():
 
     def __init__(self):
-        # flag indicating whether or not the start marker was seen
-        self.seen = False
+        # Subscribe to object recognition
+        self.listener = rospy.Subscriber("/objects", Float32MultiArray, self.objectSeen)
 
     def objectSeen(self, data):
         if len(data.data) > 0:
@@ -17,16 +17,11 @@ class Standby():
             if signID == 100:
                 rospy.loginfo('start marker seen')
                 os.system("roslaunch search all.launch")
-                self.seen = True
-
+                self.listener.unregister()
 
     def execute(self):
-        # Subscribe to object recognition
-        rospy.Subscriber("/objects", Float32MultiArray, self.objectSeen)
-
-        rate = rospy.Rate(10)
-        while not self.seen:
-            rate.sleep()
+        rospy.loginfo("Standing by")
+        rospy.spin()
 
 
 # Short ROS Node method
