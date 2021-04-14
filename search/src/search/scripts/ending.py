@@ -73,9 +73,9 @@ class Ending():
         rospy.loginfo("Explore message received: " + data.data)
         rospy.loginfo("Beginning end segment")
 
-        if data.data == "DONE":
-            self.savePose()
-            self.exploreDone = True
+        self.savePose()
+        rospy.loginfo("Beginning end segment")
+        self.exploreDone = True
 
     def pauseListener(self, data):
         if self.exploreDone == True:
@@ -133,17 +133,25 @@ class Ending():
             self.atGoal = True
 
     def execute(self):
-        if self.exploreDone == True:
-            if self.spunOnce == False:
-                spinAround()
-            elif self.atGoal == False:
-                self.poseSaved = False
-                self.spinRot = 0
-                goToGoal()
-            elif self.spinRot < 6:
-                spinAround()
-            else:
-                rospy.loginfo("MISSION COMPLETE!")
+        rate = rospy.rate(5)
+
+        missionComplete = False
+
+        while not missionComplete:
+            if self.exploreDone == True:
+                if self.spunOnce == False:
+                    self.spinAround()
+                elif self.atGoal == False:
+                    self.poseSaved = False
+                    self.spinRot = 0
+                    self.goToGoal()
+                elif self.spinRot < 6:
+                    self.spinAround()
+                else:
+                    rospy.loginfo("MISSION COMPLETE!")
+                    missionComplete = True
+
+            rate.sleep()
 
 
         rospy.spin()
