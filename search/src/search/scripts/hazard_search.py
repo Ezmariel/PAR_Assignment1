@@ -27,9 +27,6 @@ class Hazard_search():
         # creating a list for markers found
         self.marker_list = []
 
-        # Set when explore has finished
-        self.returningToOrigin = False
-
         # When exploration finishes, do some manual moving
         self.posePublisher = rospy.Publisher('/move_base_simple/goal', geometry_msgs.msg.PoseStamped, queue_size=1)
 
@@ -118,27 +115,10 @@ class Hazard_search():
         self.exploreCommandPublisher.publish("GO")
 
 
-    def processExploreMessage(self, data):
-        rospy.loginfo("Explore message received: " + data.data)
-
-        if data.data == "DONE":
-            self.returningToOrigin = True
-            self.returnToOrigin()
+    
 
 
-    def returnToOrigin():
-        rospy.loginfo("Attempting to return to origin")
-        target_pose = geometry_msgs.msg.PoseStamped()
-        target_pose.header.frame_id = 'map'
-        target_pose.header.stamp = rospy.Time.now()
-        target_pose.pose.position.x = 0
-        target_pose.pose.position.y = 0
-        target_pose.pose.position.z = 0
-        target_pose.pose.orientation.x = 0
-        target_pose.pose.orientation.y = 0
-        target_pose.pose.orientation.z = 0
-        target_pose.pose.orientation.w = 1
-        self.posePublisher.publish(target_pose)
+    
 
     def execute(self):
         rospy.loginfo("running")
