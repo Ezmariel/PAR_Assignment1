@@ -162,6 +162,7 @@ include_directories(
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
+  scripts/ending.py
   scripts/hazard_search.py
   scripts/path_pub.py
   scripts/standby.py

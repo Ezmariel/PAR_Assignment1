@@ -11,16 +11,16 @@ from nav_msgs.msg import Path
 class PublishPath():
 
     def execute(self):
-        # publish the path
+        # Publish the path
         pathPublisher = rospy.Publisher('/path', Path, queue_size=1)
 
-        # creating a listener for the transformations
+        # Listener for the transformations
         transformListener = tf.TransformListener()
 
         dest = '/map'
         src = '/base_link'
 
-        # array of poses to be published
+        # Poses to be published
         path = Path()
         path.header.frame_id = dest
 
@@ -29,10 +29,12 @@ class PublishPath():
         while not rospy.is_shutdown():
 
             try:
+                # Get the current pose of the robot
                 transformTime = rospy.Time.now()
                 transformListener.lookupTransform(dest, src, transformTime)
                 transformListener.waitForTransform(dest, src, transformTime, rospy.Duration(1.0))
 
+                # Transform the pose to map relative space
                 robotPose = PoseStamped()
                 robotPose.header.frame_id = src
                 robotPose.header.stamp = transformTime

@@ -6,64 +6,29 @@ import tf
 import tf2_ros
 import tf_conversions
 import geometry_msgs
-from visualization_msgs.msg import Marker
-from std_msgs.msg import Float32MultiArray, String
-from cv_bridge import CvBridge, CvBridgeError
-from PySide2.QtGui import QTransform
-from sensor_msgs.msg import Image
 from find_object_2d.msg import ObjectsStamped
 from random import random
+from std_msgs.msg import String
+from visualization_msgs.msg import Marker
 
 
 class Hazard_search():
 
     def __init__(self):
-        # Cv Bridge used for converting depth images
-        self.cvBridge = CvBridge()
-
-        # creating a listener for the transformations
+        # Listener for the transformations
         self.listener = tf.TransformListener()
 
-        # creating a list for markers found
+        # Markers found so far
         self.marker_list = []
 
-        # When exploration finishes, do some manual moving
-        self.posePublisher = rospy.Publisher('/move_base_simple/goal', geometry_msgs.msg.PoseStamped, queue_size=1)
+        # Publish the located hazards
+        self.hazardPublisher = rospy.Publisher('/hazards', Marker, queue_size=1)
 
-        # Send messages to explore to control, send PAUSE or GO
+        # Send messages to explore to control; PAUSE or GO
         self.exploreCommandPublisher = rospy.Publisher('/explore_cmd', String, queue_size=10)
 
         # Subscribe to object recognition
         rospy.Subscriber("/objectsStamped", ObjectsStamped, self.objectSeen)
-
-    # Save poses, so we can return for more accurate marker mapping
-    def savePose(self, markerId):
-        dest = '/map'
-        src = '/base_link'
-
-        poseFound = False
-
-        if markerId not in self.markerPoses:
-            self.markerPoses[markerId] = []
-        
-        while not poseFound:
-            try:
-                transformTime = rospy.Time.now()
-                self.listener.lookupTransform(dest, src, transformTime)
-                self.listener.waitForTransform(dest, src, transformTime, rospy.Duration(0.5))
-
-                robotPose = geometry_msgs.msg.PoseStamped()
-                robotPose.header.frame_id = src
-                robotPose.header.stamp = transformTime
-                pose = self.listener.transformPose(dest, robotPose)
-                self.markerPoses[markerId].append(pose)
-
-                rospy.loginfo(self.markerPoses)
-            
-                poseFound = True
-
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                pass
 
     def objectSeen(self, data):
         numSeen = int(len(data.objects.data) / 12)
@@ -81,7 +46,8 @@ class Hazard_search():
 
     def placeMarker(self, markerID, timeStamp):
         frameId = "hazard_" + str(markerID)
-        
+
+        # Get the pose of the located hazard        
         self.listener.lookupTransform('/map', frameId, timeStamp)
 
         signPose = geometry_msgs.msg.PoseStamped()
@@ -89,6 +55,7 @@ class Hazard_search():
         signPose.header.stamp = timeStamp
         newMarker = self.listener.transformPose('/map', signPose)
 
+        # Create a marker, which will be published to /hazards
         marker = Marker()
         marker.header.frame_id = '/map'
         marker.header.stamp = rospy.Time.now()
@@ -109,16 +76,12 @@ class Hazard_search():
         marker.color.b = random()
         marker.color.a = 1.0
 
-        hp.publish(marker)
+        # Publish the marker to /hazards
+        self.hazardPublisher.publish(marker)
 
         self.marker_list.append(markerID)
         self.exploreCommandPublisher.publish("GO")
 
-
-    
-
-
-    
 
     def execute(self):
         rospy.loginfo("running")
@@ -129,7 +92,6 @@ class Hazard_search():
 # Short ROS Node method
 if __name__ == '__main__':
     try:
-        hp = rospy.Publisher('/hazards', Marker, queue_size=1)
         rospy.init_node('hazard_search', anonymous=True)
         
         hs = Hazard_search()
