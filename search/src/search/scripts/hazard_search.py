@@ -45,6 +45,7 @@ class Hazard_search():
     
 
     def placeMarker(self, markerID, timeStamp):
+        # This prefix is defined in the vision.launch file in the bot_ws workspace
         frameId = "hazard_" + str(markerID)
 
         # Get the pose of the located hazard        

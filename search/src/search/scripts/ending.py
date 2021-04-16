@@ -28,28 +28,19 @@ class Ending():
         # Have we finished exploring?
         self.exploreDone = False
 
-        # Are we paused?
-        self.paused = False
-        
 
     def processExploreMessage(self, data):
         rospy.loginfo("Explore message received: " + data.data)
         rospy.loginfo("Beginning end segment")
-        self.goToGoal()
         self.exploreDone = True
-
+        self.goToGoal()
+        
 
     def pauseListener(self, data):
-        if self.exploreDone == True:
-            if data.data == "PAUSE":
-                self.paused = True
-                rospy.loginfo("Pausing in end segment")
+        if self.exploreDone == True and data.data == "GO":
+            rospy.loginfo("continuing in end segment")
+            self.goToGoal()
 
-            elif data.data == "GO":
-                self.paused = False
-                rospy.loginfo("continuing in end segment")
-                self.goToGoal
-    
 
     def goToGoal(self):
         rospy.loginfo("Attempting to return to origin")
